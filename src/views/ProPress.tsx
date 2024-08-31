@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import SnackbarAlert from "../components/SnackbarAlert";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { Container, Typography, Button, Box, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-import perfectGelImage from "../assets/test.jpg"; // Asegúrate de tener esta imagen en la carpeta correcta
+import proPressImage from "../assets/propress-section.webp"; // Asegúrate de tener esta imagen en la carpeta correcta
 import {
   AccessTime,
   AttachMoney,
@@ -18,11 +17,11 @@ import {
 } from "@mui/icons-material";
 import ModalPerfectGel from "../components/common/ModalPayment";
 import api from "../api";
+import NailArtPromoBanner from "../components/NailArtPromoBanner";
 
-
-// colocar aqui key publica que nos da stripe. 
+// colocar aqui key publica que nos da stripe.
 const stripePromise = loadStripe(
-  "pk_test_51PrGVVRu7eeagSsqVHg41HfGFfrOQK2e6T7xtMk4uf2ck4HrZ9BbKhYP8UDRafWvzf20NjF9nVENyMPZDAsoZQyV001fGw0zs7"
+  "pk_live_51PrGVVRu7eeagSsqbGC4WTy11cRP8nM6k7KavOwsLPdZUGQyLVCq88JwxI35cRFnWAydkCGv27skz6RNVO8g27hJ008hUYzaRo"
 );
 
 const ProPress: React.FC = () => {
@@ -47,6 +46,15 @@ const ProPress: React.FC = () => {
   >("error");
 
   const location = useLocation();
+  interface checkoutData {
+    priceId: string;
+    name: string;
+    lastname: string | null;
+    email: string;
+    phone: string | null;
+    comment: string | null;
+    course: string;
+  }
 
   useEffect(() => {
     const checkTransactionStatus = async () => {
@@ -77,6 +85,8 @@ const ProPress: React.FC = () => {
   }, [location.search]);
 
   const handleCheckout = async () => {
+    setError("");
+
     setLoading(true); // Empieza a cargar
 
     const stripe = await stripePromise;
@@ -88,9 +98,15 @@ const ProPress: React.FC = () => {
     }
 
     try {
-      // Para cambiar el producto de stripe que apunta, cambiar este price id. 
-      const checkoutData: any = {
-        priceId: "price_1Pt9QWRu7eeagSsqDaVu8IZg",
+      // Para cambiar el producto de stripe que apunta, cambiar este price id.
+      const checkoutData: checkoutData = {
+        priceId: "price_1PtmTIRu7eeagSsql9Uyzmo4",
+        name: "",
+        lastname: null,
+        email: "",
+        phone: null,
+        comment: null,
+        course: "propress",
       };
 
       if (name) checkoutData.name = name;
@@ -98,7 +114,6 @@ const ProPress: React.FC = () => {
       if (email) checkoutData.email = email;
       if (phone) checkoutData.phone = phone;
       if (comment) checkoutData.comment = comment; // Añadir comentarios si están presentes
-      checkoutData.course = "propress";
 
       const response = await api.post(
         "payments/create-checkout-session",
@@ -132,8 +147,9 @@ const ProPress: React.FC = () => {
       </Typography>
       <Typography variant="h5" align="center" paragraph>
         Optimiza tu técnica con Pro Press y aprende a crear uñas duraderas y
-        estéticamente perfectas, reduciendo significativamente el tiempo de
-        aplicación con resultados de alta calidad.
+        estéticamente perfectas, en tiempo record. 30 Minutos. Reduciendo
+        significativamente el tiempo de aplicación con resultados de alta
+        calidad.
       </Typography>
 
       <Grid container spacing={2} alignItems="center">
@@ -141,7 +157,7 @@ const ProPress: React.FC = () => {
         <Grid item xs={12} md={5}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <motion.img
-              src={perfectGelImage}
+              src={proPressImage}
               alt="Perfect Gel"
               style={{ maxWidth: "100%", borderRadius: 8 }}
               initial={{ opacity: 0 }}
@@ -197,7 +213,7 @@ const ProPress: React.FC = () => {
                     sx={{ display: "flex", alignItems: "center", mb: 0.2 }}
                   >
                     <CalendarToday sx={{ mr: 1 }} />
-                    <span>Fecha del curso: 22 de Septiembre</span>
+                    <span>Fecha del curso: Domingo, 22 de Septiembre</span>
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -207,13 +223,10 @@ const ProPress: React.FC = () => {
                       display: "flex",
                       alignItems: "center",
                       mb: 0.2,
-                      fontSize: "10px",
                     }}
                   >
                     <LocationOn sx={{ mr: 1 }} />
-                    <span>
-                      Donde: Paseo Santa Maria De La Cabeza, 10. Madrid
-                    </span>
+                    <span>Paseo Santa Maria De La Cabeza, 10. Madrid</span>
                   </Typography>
                 </Grid>
               </Grid>
@@ -239,7 +252,7 @@ const ProPress: React.FC = () => {
                     }}
                   >
                     <Redeem sx={{ mr: 1 }} />
-                    <span>Kit de trabajo Pro Press de regalo</span>
+                    <span>¡¡Kit de trabajo incluido!!</span>
                   </Typography>
                 </Grid>
               </Grid>
@@ -310,13 +323,7 @@ const ProPress: React.FC = () => {
                 Detalles del Curso
               </Typography>
 
-              {/* Fecha de Inicio */}
-              <Typography variant="h6" sx={{ color: "#081e49", mb: 1 }}>
-                Fecha de Inicio
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                Domingo 22 de septiembre de 2024
-              </Typography>
+            
 
               {/* Horario */}
               <Typography variant="h6" sx={{ color: "#081e49", mb: 1 }}>
@@ -334,12 +341,13 @@ const ProPress: React.FC = () => {
               </Typography>
               <Typography variant="body1" paragraph sx={{ mb: 2 }}>
                 Domina la técnica avanzada de Pro Press para ofrecer uñas de
-                calidad profesional con una mayor durabilidad y belleza. Este
-                curso te enseñará desde el manejo preciso de la técnica hasta la
-                aplicación final, con un enfoque en la eficiencia para reducir
-                el tiempo de trabajo sin comprometer el acabado. Aprenderás
-                métodos innovadores para optimizar cada paso del proceso,
-                asegurando resultados consistentes y espectaculares.
+                calidad profesional con una mayor durabilidad y en menos tiempo
+                de lo habitual, llegando a realizar el doble de servicios en una
+                jornada. Este curso te enseñará desde el manejo preciso de la
+                técnica hasta la aplicación final, con un enfoque en la
+                eficiencia para reducir el tiempo de trabajo sin comprometer el
+                acabado. Aprenderás métodos innovadores para optimizar cada paso
+                del proceso, asegurando resultados de alta calidad.
               </Typography>
               <Typography variant="h6" sx={{ color: "#081e49", mb: 1 }}>
                 Temario
@@ -351,46 +359,42 @@ const ProPress: React.FC = () => {
                   <strong>Teoría:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Introducción a los conceptos clave y fundamentos de la técnica
-                  Pro Press.
+                  Introducción a los conceptos básicos
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>
-                    Técnica Dual System (Full Dual, Half Dual) Acrigel:
-                  </strong>
+                  <strong>Conocimiento y uso correcto del producto:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Aprenderás a utilizar el sistema Dual con opciones Full y Half
-                  Dual, junto con Acrigel para resultados duraderos y
-                  eficientes.
+                  Aprenderás a utilizar los productos de manera efectiva para
+                  obtener los mejores resultados.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Técnica Híbrida::</strong>
+                  <strong>Manicura Pro:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Combinación de técnicas tradicionales y modernas para
-                  optimizar el proceso de aplicación y lograr un acabado
-                  perfecto.
+                  Técnicas avanzadas de manicura para ofrecer un acabado
+                  profesional.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Encapsulados:</strong>
+                  <strong>Aerografía:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Técnicas para encapsular elementos decorativos en el gel para
-                  obtener diseños únicos y personalizados.
+                  Uso de aerógrafo para crear diseños artísticos en las uñas.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Builder Gel:</strong>
+                  <strong>Estructuras de salon:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Uso avanzado del Builder Gel para fortalecer y modelar las
-                  uñas, proporcionando una base sólida y duradera.
+                  Aprende a optimizar el tiempo en montaje de las estructuras
+                  habituales.
                 </Typography>
               </Box>
             </Box>
           </Box>
         </Grid>
       </Grid>
+
+      <NailArtPromoBanner/>
 
       <ModalPerfectGel
         openModal={openModal}

@@ -62,9 +62,10 @@ const ModalPerfectGel: React.FC<ModalPerfectGelProps> = ({
     else if (name.length > 40)
       newErrors.name = "El nombre no puede exceder los 40 caracteres";
 
-    // Validación del apellido
-    if (lastname.length > 40)
-      newErrors.lastname = "El apellido no puede exceder los 40 caracteres";
+    // Validación de los apellidos
+    if (!lastname) newErrors.lastname = "Los apellidos son obligatorios";
+    else if (lastname.length > 40)
+      newErrors.lastname = "Los apellidos no pueden exceder los 40 caracteres";
 
     // Validación del correo electrónico
     if (!email) newErrors.email = "El correo electrónico es obligatorio";
@@ -75,7 +76,9 @@ const ModalPerfectGel: React.FC<ModalPerfectGelProps> = ({
       newErrors.email = "El correo electrónico no es válido";
 
     // Validación del teléfono
-    if (phone) {
+    if (!phone) {
+      newErrors.phone = "El teléfono es obligatorio";
+    } else {
       const phoneRegex = /^\d+$/; // Expresión regular para solo números
       if (phone.length < 7 || phone.length > 11) {
         newErrors.phone = "El teléfono debe tener entre 7 y 11 dígitos";
@@ -84,7 +87,7 @@ const ModalPerfectGel: React.FC<ModalPerfectGelProps> = ({
       }
     }
 
-    // Validación del comentario
+    // Validación del comentario (opcional)
     if (comment.length > 255)
       newErrors.comment = "El comentario no puede exceder los 255 caracteres";
 
@@ -155,7 +158,7 @@ const ModalPerfectGel: React.FC<ModalPerfectGelProps> = ({
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Apellido"
+                label="Apellidos"
                 fullWidth
                 margin="normal"
                 value={lastname}
@@ -216,7 +219,7 @@ const ModalPerfectGel: React.FC<ModalPerfectGelProps> = ({
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Comentarios"
+                label="Comentarios (Opcional)"
                 fullWidth
                 multiline
                 rows={4}

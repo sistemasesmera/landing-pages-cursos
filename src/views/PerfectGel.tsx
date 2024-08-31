@@ -5,7 +5,7 @@ import SnackbarAlert from "../components/SnackbarAlert";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { Container, Typography, Button, Box, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-import perfectGelImage from "../assets/test.jpg";
+import perfectGelImage from "../assets/perfect-gel-section.webp";
 import {
   AccessTime,
   AttachMoney,
@@ -16,10 +16,11 @@ import {
 } from "@mui/icons-material";
 import ModalPerfectGel from "../components/common/ModalPayment";
 import api from "../api";
+import NailArtPromoBanner from "../components/NailArtPromoBanner";
 
 // colocar aqui key publica que nos da stripe.
 const stripePromise = loadStripe(
-  "pk_test_51PrGVVRu7eeagSsqVHg41HfGFfrOQK2e6T7xtMk4uf2ck4HrZ9BbKhYP8UDRafWvzf20NjF9nVENyMPZDAsoZQyV001fGw0zs7"
+  "pk_live_51PrGVVRu7eeagSsqbGC4WTy11cRP8nM6k7KavOwsLPdZUGQyLVCq88JwxI35cRFnWAydkCGv27skz6RNVO8g27hJ008hUYzaRo"
 );
 
 const PerfectGel: React.FC = () => {
@@ -44,6 +45,16 @@ const PerfectGel: React.FC = () => {
   >("error");
 
   const location = useLocation();
+
+  interface checkoutData {
+    priceId: string;
+    name: string;
+    lastname: string | null;
+    email: string;
+    phone: string | null;
+    comment: string | null;
+    course: string;
+  }
 
   useEffect(() => {
     const checkTransactionStatus = async () => {
@@ -74,6 +85,7 @@ const PerfectGel: React.FC = () => {
   }, [location.search]);
 
   const handleCheckout = async () => {
+    setError("");
     setLoading(true); // Empieza a cargar
     const stripe = await stripePromise;
 
@@ -85,8 +97,14 @@ const PerfectGel: React.FC = () => {
 
     try {
       // Para cambiar el producto de stripe que apunta, cambiar este price id.
-      const checkoutData: any = {
-        priceId: "price_1Pt9MfRu7eeagSsqERJjmi4Z",
+      const checkoutData: checkoutData = {
+        priceId: "price_1PtmSVRu7eeagSsq1SK1XKnt",
+        name: "",
+        lastname: null,
+        email: "",
+        phone: null,
+        comment: null,
+        course: "perfectgel", // Añadir el nombre del curso si es diferente de "perfectgel"
       };
 
       if (name) checkoutData.name = name;
@@ -94,7 +112,6 @@ const PerfectGel: React.FC = () => {
       if (email) checkoutData.email = email;
       if (phone) checkoutData.phone = phone;
       if (comment) checkoutData.comment = comment; // Añadir comentarios si están presentes
-      checkoutData.course = "perfectgel";
 
       const response = await api.post(
         "payments/create-checkout-session",
@@ -200,7 +217,7 @@ const PerfectGel: React.FC = () => {
                     sx={{ display: "flex", alignItems: "center", mb: 0.2 }}
                   >
                     <CalendarToday sx={{ mr: 1 }} />
-                    <span>Fecha del curso: 15 de Septiembre</span>
+                    <span>Fecha del curso: Domingo, 15 de Septiembre</span>
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -210,13 +227,10 @@ const PerfectGel: React.FC = () => {
                       display: "flex",
                       alignItems: "center",
                       mb: 0.2,
-                      fontSize: "10px",
                     }}
                   >
                     <LocationOn sx={{ mr: 1 }} />
-                    <span>
-                      Donde: Paseo Santa Maria De La Cabeza, 10. Madrid
-                    </span>
+                    <span>Paseo Santa Maria De La Cabeza, 10. Madrid</span>
                   </Typography>
                 </Grid>
               </Grid>
@@ -301,14 +315,6 @@ const PerfectGel: React.FC = () => {
                 Detalles del Curso
               </Typography>
 
-              {/* Fecha de Inicio */}
-              <Typography variant="h6" sx={{ color: "#081e49", mb: 1 }}>
-                Fecha de Inicio
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                Domingo 15 de septiembre de 2024
-              </Typography>
-
               {/* Horario */}
               <Typography variant="h6" sx={{ color: "#081e49", mb: 1 }}>
                 Horario
@@ -325,9 +331,9 @@ const PerfectGel: React.FC = () => {
               </Typography>
               <Typography variant="body1" paragraph sx={{ mb: 2 }}>
                 Aprende la técnica avanzada de Perfect Gel para crear uñas
-                duraderas y hermosas. En este curso, cubrirás todos los aspectos
-                esenciales, desde la preparación hasta la aplicación final,
-                asegurando resultados profesionales.
+                duraderas y perfectas. En este curso, descubriras todos los
+                aspectos esenciales, desde la preparación hasta la aplicación
+                final, asegurando resultados profesionales.
               </Typography>
 
               {/* Temario */}
@@ -341,39 +347,47 @@ const PerfectGel: React.FC = () => {
                   <strong>Teoría:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Introducción a los conceptos básicos del curso.
+                  Introducción a los conceptos clave y fundamentos
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Conocimiento y uso correcto del producto:</strong>
+                  <strong>
+                    Técnica Dual System (Full Dual, Half Dual) Acrigel:
+                  </strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Aprenderás a utilizar los productos de manera efectiva para
-                  obtener los mejores resultados.
+                  Aprenderás a utilizar el sistema Dual con opciones Full y Half
+                  Dual, junto con Acrigel para resultados duraderos y
+                  eficientes.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Manicura Pro:</strong>
+                  <strong>Técnica Híbrida::</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Técnicas avanzadas de manicura para ofrecer un acabado
-                  profesional.
+                  Combinación de técnicas tradicionales y modernas para
+                  optimizar el proceso de aplicación y lograr un acabado
+                  perfecto.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Aerografía:</strong>
+                  <strong>Encapsulados:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Uso de aerógrafo para crear diseños artísticos en las uñas.
+                  Técnicas para encapsular elementos decorativos en el gel para
+                  obtener diseños únicos y personalizados.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Estructuras comerciales:</strong>
+                  <strong>Builder Gel:</strong>
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ mb: 2 }}>
-                  Estrategias para organizar y gestionar tu negocio de uñas.
+                  Uso avanzado del Builder Gel para fortalecer y modelar las
+                  uñas, proporcionando una base sólida y duradera.
                 </Typography>
               </Box>
             </Box>
           </Box>
         </Grid>
       </Grid>
+
+      <NailArtPromoBanner />
 
       <ModalPerfectGel
         openModal={openModal}

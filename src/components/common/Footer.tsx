@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
           {/* Información de contacto */}
           <Box textAlign="center" mt={{ xs: 2, md: 0 }}>
             <Typography variant="body2" color="textSecondary">
-              Teléfono: +34 608 610 122
+              Teléfono: +34 673 753 508
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Email:{" "}
