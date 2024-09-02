@@ -5,14 +5,14 @@ import SnackbarAlert from "../components/SnackbarAlert";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { Container, Typography, Button, Box, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-import proPressImage from "../assets/propress-section.webp"; // Asegúrate de tener esta imagen en la carpeta correcta
+import proPressImage from "../assets/propress-section.webp"; 
 import {
   AccessTime,
   AttachMoney,
   CalendarToday,
   LocationOn,
   Badge,
-  ArrowRightAlt, // Nuevo ícono
+  ArrowRightAlt,
   Redeem,
 } from "@mui/icons-material";
 import ModalPerfectGel from "../components/common/ModalPayment";
